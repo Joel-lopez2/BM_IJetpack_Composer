@@ -8,7 +8,9 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -39,10 +41,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun BMIScreen() {
-    var name by remember { mutableStateOf("Tarnished") }
-    var pes by remember { mutableIntStateOf(80) }
+    var nombre by remember { mutableStateOf("Sin Luz") }
+    var peso by remember { mutableIntStateOf(80) }
     var alçada by remember { mutableFloatStateOf(180f) }
     var bmi by remember { mutableFloatStateOf(0f) }
+
+    val estadoScroll = rememberScrollState()
 
     Box(
         modifier = Modifier
@@ -53,20 +57,21 @@ fun BMIScreen() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(estadoScroll)
                 .padding(vertical = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Header
+            // Cabecera
             Text(
-                text = "THE LANDS BETWEEN",
+                text = "LAS TIERRAS INTERMEDIAS",
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
                 color = EldenDarkGold,
                 letterSpacing = 3.sp
             )
             Text(
-                text = "STATUS OF THE TARNISHED",
+                text = "ESTADO DEL SIN LUZ",
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 color = EldenGold,
@@ -79,32 +84,31 @@ fun BMIScreen() {
                 modifier = Modifier.padding(horizontal = 32.dp)
             )
 
-            // Main Card Container
+            // Tarjeta contenedora principal
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f)
                     .border(BorderStroke(1.dp, EldenBorder), RoundedCornerShape(4.dp)),
                 colors = CardDefaults.cardColors(containerColor = EldenCardBg),
                 shape = RoundedCornerShape(4.dp)
             ) {
                 Column(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxWidth()
                         .padding(20.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    // Name Field
+                    // Nombre del Sin Luz
                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         Text(
-                            text = "TARNISHED NAME",
+                            text = "NOMBRE DEL SIN LUZ",
                             fontSize = 11.sp,
                             color = EldenTextSecondary,
                             letterSpacing = 1.5.sp
                         )
                         OutlinedTextField(
-                            value = name,
-                            onValueChange = { name = it },
+                            value = nombre,
+                            onValueChange = { nombre = it },
                             modifier = Modifier.fillMaxWidth(),
                             colors = OutlinedTextFieldDefaults.colors(
                                 focusedBorderColor = EldenGold,
@@ -119,10 +123,10 @@ fun BMIScreen() {
                         )
                     }
 
-                    // Weight (Pes)
+                    // Peso de equipamiento
                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         Text(
-                            text = "EQUIPMENT WEIGHT (PES)",
+                            text = "PESO DE EQUIPAMIENTO (PESO)",
                             fontSize = 11.sp,
                             color = EldenTextSecondary,
                             letterSpacing = 1.5.sp
@@ -137,14 +141,14 @@ fun BMIScreen() {
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = "$pes Kg",
+                                text = "$peso Kg",
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = EldenGold
                             )
                             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 Button(
-                                    onClick = { if (pes > 20) pes-- },
+                                    onClick = { if (peso > 20) peso-- },
                                     colors = ButtonDefaults.buttonColors(containerColor = EldenCardBg),
                                     border = BorderStroke(1.dp, EldenBorder),
                                     shape = RoundedCornerShape(2.dp),
@@ -153,7 +157,7 @@ fun BMIScreen() {
                                     Text("-", color = EldenGold, fontSize = 16.sp, fontWeight = FontWeight.Bold)
                                 }
                                 Button(
-                                    onClick = { if (pes < 300) pes++ },
+                                    onClick = { if (peso < 300) peso++ },
                                     colors = ButtonDefaults.buttonColors(containerColor = EldenCardBg),
                                     border = BorderStroke(1.dp, EldenBorder),
                                     shape = RoundedCornerShape(2.dp),
@@ -165,14 +169,14 @@ fun BMIScreen() {
                         }
                     }
 
-                    // Height (Alçada)
+                    // Estatura
                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = "STATURE (ALÇADA)",
+                                text = "ESTATURA (ALÇADA)",
                                 fontSize = 11.sp,
                                 color = EldenTextSecondary,
                                 letterSpacing = 1.5.sp
@@ -196,13 +200,13 @@ fun BMIScreen() {
                         )
                     }
 
-                    Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                    // Calculate Button
+                    // Botón para calcular IMC
                     Button(
                         onClick = {
                             val alçadaMetres = alçada / 100f
-                            bmi = (pes.toFloat() / (alçadaMetres * alçadaMetres))
+                            bmi = (peso.toFloat() / (alçadaMetres * alçadaMetres))
                         },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(
@@ -213,7 +217,7 @@ fun BMIScreen() {
                         shape = RoundedCornerShape(4.dp)
                     ) {
                         Text(
-                            text = "EXAMINE GREAT RUNE (CALCULATE BMI)",
+                            text = "EXAMINAR GRAN RUNA (CALCULAR IMC)",
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 1.5.sp,
                             fontSize = 13.sp,
@@ -221,33 +225,33 @@ fun BMIScreen() {
                         )
                     }
 
-                    // Result Display
+                    // Visualización del resultado
                     if (bmi != 0f) {
-                        val loadStatus = when {
-                            bmi < 18.5f -> "Light Load (Emaciated)"
-                            bmi < 25f -> "Medium Load (Balanced Physique)"
-                            bmi < 30f -> "Heavy Load (Slightly Overweight)"
-                            else -> "Overburdened (Fat Roll!)"
+                        val estatCarga = when {
+                            bmi < 18.5f -> "Carga Ligera (Emaciado)"
+                            bmi < 25f -> "Carga Media (Físico Equilibrado)"
+                            bmi < 30f -> "Carga Pesada (Ligeramente Sobrepeso)"
+                            else -> "Sobrecargado (¡Rodamiento Pesado!)"
                         }
-                        val statusColor = if (bmi >= 30f) EldenCrimson else EldenGold
+                        val colorEstat = if (bmi >= 30f) EldenCrimson else EldenGold
 
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .background(EldenSurface, RoundedCornerShape(4.dp))
-                                .border(BorderStroke(1.dp, statusColor), RoundedCornerShape(4.dp))
+                                .border(BorderStroke(1.dp, colorEstat), RoundedCornerShape(4.dp))
                                 .padding(12.dp),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Text(
-                                text = "GREAT RUNE BMI: ${String.format("%.2f", bmi)}",
+                                text = "IMC DE GRAN RUNA: ${String.format("%.2f", bmi)}",
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = statusColor
+                                color = colorEstat
                             )
                             Text(
-                                text = loadStatus,
+                                text = estatCarga,
                                 fontSize = 12.sp,
                                 color = EldenTextPrimary,
                                 textAlign = TextAlign.Center
