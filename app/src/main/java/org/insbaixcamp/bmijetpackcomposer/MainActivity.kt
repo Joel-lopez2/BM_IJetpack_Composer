@@ -15,6 +15,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -228,12 +229,17 @@ fun BMIScreen() {
                     // Visualización del resultado
                     if (bmi != 0f) {
                         val estatCarga = when {
-                            bmi < 18.5f -> "Carga Ligera (Emaciado)"
-                            bmi < 25f -> "Carga Media (Físico Equilibrado)"
+                            bmi < 18.5f -> "Carga Ligera (Emaciado - Bajo peso)"
+                            bmi < 25f -> "Carga Media (Físico Equilibrado - Normal)"
                             bmi < 30f -> "Carga Pesada (Ligeramente Sobrepeso)"
-                            else -> "Sobrecargado (¡Rodamiento Pesado!)"
+                            else -> "Sobrecargado (¡Rodamiento Pesado! - Obesidad)"
                         }
-                        val colorEstat = if (bmi >= 30f) EldenCrimson else EldenGold
+                        val colorEstat = when {
+                            bmi < 18.5f -> Color(0xFF5BC0DE) // Cian / Azul etéreo
+                            bmi < 25f -> EldenGold // Oro de la Gracia
+                            bmi < 30f -> Color(0xFFE67E22) // Ámbar de advertencia
+                            else -> EldenCrimson // Rojo carmesí de peligro
+                        }
 
                         Column(
                             modifier = Modifier
